@@ -1,0 +1,36 @@
+name: Java CI with Maven (WAR Build)
+
+# Der Workflow startet bei jedem Push oder Pull Request auf den Main-Branch
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. Quellcode auschecken
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # 2. Java-Umgebung einrichten (hier Java 17, passe es ggf. an dein Projekt an)
+    - name: Set up JDK 17
+      uses: actions/actions-setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: 'maven' # Cached Maven-Abhängigkeiten für schnellere Builds
+
+    # 3. Proejt mi Maven baune udn kompilieren
+    - name: Build with Maven (Generate WAR)
+      run: mvn clean package
+
+    - name: Upload WAR Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: backend-war-file
+        # Maven legt das WAR-File standardmäßig im 'target'-Ordner ab
+        path: target/*.war

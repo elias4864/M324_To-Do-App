@@ -1,0 +1,6 @@
+build_frontend:
+  stage: build
+  image: node:20-alpine  # Hier wird das Image definiert
+  script:
+    - npm ci
+    - npm run build
